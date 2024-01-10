@@ -1,0 +1,3 @@
+C:/Users/11429/CLionProjects/tetris/cmake-build-debug-visual-studio/CMakeFiles/tetris.dir
+C:/Users/11429/CLionProjects/tetris/cmake-build-debug-visual-studio/CMakeFiles/edit_cache.dir
+C:/Users/11429/CLionProjects/tetris/cmake-build-debug-visual-studio/CMakeFiles/rebuild_cache.dir
