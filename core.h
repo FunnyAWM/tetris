@@ -1,5 +1,5 @@
-#ifndef TETRIS_FUNC_H
-#define TETRIS_FUNC_H
+#ifndef TETRIS_CORE_H
+#define TETRIS_CORE_H
 
 #include <windows.h>
 #include <string>
@@ -20,4 +20,4 @@ void setTitle(const string &);
 
 void closeHandle();
 
-#endif //TETRIS_FUNC_H
+#endif //TETRIS_CORE_H

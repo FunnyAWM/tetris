@@ -1,5 +1,5 @@
 #include "game.h"
-#include "func.h"
+#include "core.h"
 #include <ctime>
 
 using std::cout;

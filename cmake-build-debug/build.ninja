@@ -55,8 +55,8 @@ build CMakeFiles/tetris.dir/main.cpp.obj: CXX_COMPILER__tetris_unscanned_Debug C
   OBJECT_DIR = CMakeFiles\tetris.dir
   OBJECT_FILE_DIR = CMakeFiles\tetris.dir
 
-build CMakeFiles/tetris.dir/func.cpp.obj: CXX_COMPILER__tetris_unscanned_Debug C$:/Users/11429/CLionProjects/tetris/func.cpp || cmake_object_order_depends_target_tetris
-  DEP_FILE = CMakeFiles\tetris.dir\func.cpp.obj.d
+build CMakeFiles/tetris.dir/core.cpp.obj: CXX_COMPILER__tetris_unscanned_Debug C$:/Users/11429/CLionProjects/tetris/core.cpp || cmake_object_order_depends_target_tetris
+  DEP_FILE = CMakeFiles\tetris.dir\core.cpp.obj.d
   FLAGS = -O0 -Wall -g -std=gnu++11 -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\tetris.dir
   OBJECT_FILE_DIR = CMakeFiles\tetris.dir
@@ -75,7 +75,7 @@ build CMakeFiles/tetris.dir/game.cpp.obj: CXX_COMPILER__tetris_unscanned_Debug C
 #############################################
 # Link the executable tetris.exe
 
-build tetris.exe: CXX_EXECUTABLE_LINKER__tetris_Debug CMakeFiles/tetris.dir/main.cpp.obj CMakeFiles/tetris.dir/func.cpp.obj CMakeFiles/tetris.dir/game.cpp.obj
+build tetris.exe: CXX_EXECUTABLE_LINKER__tetris_Debug CMakeFiles/tetris.dir/main.cpp.obj CMakeFiles/tetris.dir/core.cpp.obj CMakeFiles/tetris.dir/game.cpp.obj
   FLAGS = -O0 -Wall -g
   LINK_FLAGS = -static
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32

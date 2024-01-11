@@ -1,4 +1,4 @@
-#include "func.h"
+#include "core.h"
 
 HANDLE handle;
 

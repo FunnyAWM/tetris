@@ -1,5 +1,5 @@
 #include "game.h"
-#include "func.h"
+#include "core.h"
 #include "data.h"
 
 void renderWindow(int x, int y) {
