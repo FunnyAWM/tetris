@@ -1,8 +1,4 @@
-//
-// Created by 11429 on 2024/1/11.
-//
-
-#include "func.h"
+ #include "func.h"
 
 HANDLE handle;
 
