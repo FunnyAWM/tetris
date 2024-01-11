@@ -1,6 +1,4 @@
 # ninja log v5
-3	1530	7265752665149554	CMakeFiles/tetris.dir/main.cpp.obj	30c7a4e6d0c297e5
-1531	1984	7265752669572662	tetris.exe	d2fb8a1b9793199
-0	10	0	clean	c6d01ef86ca93c16
 4	1993	7265771563518880	CMakeFiles/tetris.dir/main.cpp.obj	30c7a4e6d0c297e5
 1994	2426	7265771567744060	tetris.exe	d2fb8a1b9793199
+0	10	0	clean	c6d01ef86ca93c16
