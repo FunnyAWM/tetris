@@ -5,19 +5,17 @@
 #include <iostream>
 #include <ctime>
 
-namespace TETRIS{
-    //系统调用模块
-    void initHandle(){
-        //TODO
-    }
-
-    void setColor(int color){
-        //TODO
-    }
-
-    void setCursorVisibility(int flag){
-        //TODO
-    }
-
+//系统调用模块
+void initHandle() {
+    //TODO
 }
+
+void setColor(int color) {
+    //TODO
+}
+
+void setCursorVisibility(int flag) {
+    //TODO
+}
+
 #endif //TETRIS_MAIN_H
