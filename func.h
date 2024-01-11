@@ -1,7 +1,3 @@
-//
-// Created by 11429 on 2024/1/11.
-//
-
 #ifndef TETRIS_FUNC_H
 #define TETRIS_FUNC_H
 
