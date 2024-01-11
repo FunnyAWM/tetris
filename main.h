@@ -15,7 +15,7 @@ namespace TETRIS{
         //TODO
     }
 
-    void setCursorVisibility(){
+    void setCursorVisibility(int flag){
         //TODO
     }
 
