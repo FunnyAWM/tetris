@@ -2,9 +2,7 @@
 #define TETRIS_FUNC_H
 
 #include <windows.h>
-#include <iostream>
 #include <string>
-#include <ctime>
 
 using std::string;
 
