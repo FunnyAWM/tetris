@@ -11,7 +11,6 @@ int level = 1;
 int score = 0;
 int blockIndex;
 int blockStatus;
-extern std::mutex mtx;
 
 
 void renderWindow(int x, int y) {
@@ -118,7 +117,6 @@ void deleteBlock(int x, int y) {
 DWORD moveBlock(LPVOID pVoid) {
     for (;;) {
         if (kbhit()) {
-            mtx.lock();
             switch (getch()) {
                 case 'W':
                 case 'w':
@@ -149,8 +147,6 @@ DWORD moveBlock(LPVOID pVoid) {
                 default:
                     break;
             }
-            cout << endl;
-            mtx.unlock();
         }
     }
 }
