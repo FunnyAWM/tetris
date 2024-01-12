@@ -16,6 +16,22 @@ void displayUI();
 
 void displayLevel(int);
 
-void displayBlock(int,int,int);
+void generateBlock(int, int, int);
+
+void deleteBlock(int, int);
+
+void moveBlock();
+
+void moveLeft();
+
+void moveRight();
+
+void rotate();
+
+void moveDown();
+
+void pause();
+
+void moveBottom();
 
 #endif //TETRIS_GAME_H

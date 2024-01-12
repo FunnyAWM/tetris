@@ -1,4 +1,4 @@
-#include <cmath>
+#include <conio.h>
 #include <random>
 #include "game.h"
 #include "core.h"
@@ -7,6 +7,9 @@
 //游戏窗口渲染
 int level = 1;
 int score = 0;
+int blockIndex;
+int blockStatus;
+
 
 void renderWindow(int x, int y) {
     for (int i = 0; i < 25; i++) {
@@ -74,13 +77,13 @@ void displayLevel(int num) {
     cout << "等级：" << level << endl;
 }
 
-void displayBlock(int x, int y, int color) {
+void generateBlock(int x, int y, int color) {
     std::default_random_engine seed;
     std::mt19937 gen(seed());
     std::uniform_int_distribution<> index(0,6);
     std::uniform_int_distribution<> status(0,3);
-    int blockIndex=index(gen);
-    int blockStatus=status(gen);
+    blockIndex=index(gen);
+    blockStatus=status(gen);
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
             if (blockShape[blockIndex][blockStatus][i][j] == 1) {
@@ -93,4 +96,77 @@ void displayBlock(int x, int y, int color) {
         }
         cout << endl;
     }
+}
+
+void deleteBlock(int x,int y){
+    for(int i=0;i<4;i++){
+        for(int j=0;j<4;j++){
+            if(blockShape[blockIndex][blockStatus][i][j]==1){
+                setPosition(x+j,y+i);
+                cout << "  ";
+            }
+        }
+    }
+}
+
+void moveBlock(){
+    for(;;){
+        if(kbhit()){
+            switch (getch()) {
+                case 'W':
+                case 'w':
+                case 72:
+                    cout << "TEST_UP";
+                    break;
+                case 'A':
+                case 'a':
+                case 75:
+                    cout << "TEST_LEFT";
+                    break;
+                case 'D':
+                case 'd':
+                case 77:
+                    cout << "TEST_RIGHT";
+                    break;
+                case 'S':
+                case 's':
+                case 80:
+                    cout << "TEST_DOWN";
+                    break;
+                case 32:
+                    cout << "TEST_SPACE";
+                    break;
+                case 13:
+                    cout << "TEST_ENTER";
+                    break;
+                default:
+                    break;
+            }
+            cout << endl;
+        }
+    }
+}
+
+void moveLeft() {
+    //TODO
+}
+
+void moveRight() {
+    //TODO
+}
+
+void rotate() {
+    //TODO
+}
+
+void moveDown() {
+    //TODO
+}
+
+void pause() {
+    //TODO
+}
+
+void moveBottom() {
+    //TODO
 }
