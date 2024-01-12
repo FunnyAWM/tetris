@@ -2,7 +2,6 @@
 #define TETRIS_GAME_H
 
 #include <iostream>
-#include <mutex>
 
 using std::cout;
 using std::cin;
