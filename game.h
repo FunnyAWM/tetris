@@ -23,7 +23,7 @@ void displayBlock(int, int, int);
 
 void deleteBlock(int, int);
 
-unsigned long moveBlock(void *pVoid);
+void moveBlock();
 
 void moveLeft();
 

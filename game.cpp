@@ -5,7 +5,6 @@
 #include "data.h"
 
 
-
 //”Œœ∑¥∞ø⁄‰÷»æ
 int level = 1;
 int score = 0;
@@ -114,45 +113,43 @@ void deleteBlock(int x, int y) {
     }
 }
 
-DWORD moveBlock(LPVOID pVoid) {
-    for (;;) {
-        if (kbhit()) {
-            switch (getch()) {
-                case 'W':
-                case 'w':
-                case 72:
-                    rotate();
-                    break;
-                case 'A':
-                case 'a':
-                case 75:
-                    moveLeft();
-                    break;
-                case 'D':
-                case 'd':
-                case 77:
-                    moveRight();
-                    break;
-                case 'S':
-                case 's':
-                case 80:
-                    moveDown();
-                    break;
-                case 32:
-                    pause();
-                    break;
-                case 13:
-                    moveBottom();
-                    break;
-                default:
-                    break;
-            }
+void moveBlock() {
+    if (kbhit()) {
+        switch (getch()) {
+            case 'W':
+            case 'w':
+            case 72:
+                rotate();
+                break;
+            case 'A':
+            case 'a':
+            case 75:
+                moveLeft();
+                break;
+            case 'D':
+            case 'd':
+            case 77:
+                moveRight();
+                break;
+            case 'S':
+            case 's':
+            case 80:
+                moveDown();
+                break;
+            case 32:
+                pause();
+                break;
+            case 13:
+                moveBottom();
+                break;
+            default:
+                break;
         }
     }
 }
 
 void moveLeft() {
-    //TODO
+
 }
 
 void moveRight() {
@@ -161,7 +158,7 @@ void moveRight() {
 
 void rotate() {
     blockStatus++;
-    blockStatus%=4;
+    blockStatus %= 4;
     //TODO
 }
 
