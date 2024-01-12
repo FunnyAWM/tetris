@@ -2,7 +2,8 @@
 
 HANDLE handle;
 
-//绯荤粺璋冪敤妯″潡
+//系统调用模块
+
 void initHandle() {
     handle = GetStdHandle(STD_OUTPUT_HANDLE);
 }

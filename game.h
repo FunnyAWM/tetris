@@ -12,4 +12,10 @@ void renderWindow(int, int);
 
 void gameInit();
 
+void displayUI();
+
+void displayLevel(int);
+
+void displayBlock(int,int,int);
+
 #endif //TETRIS_GAME_H
