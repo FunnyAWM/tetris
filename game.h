@@ -2,6 +2,7 @@
 #define TETRIS_GAME_H
 
 #include <iostream>
+#include <mutex>
 
 using std::cout;
 using std::cin;
@@ -22,7 +23,7 @@ void displayBlock(int, int, int);
 
 void deleteBlock(int, int);
 
-void moveBlock();
+unsigned long moveBlock(void *pVoid);
 
 void moveLeft();
 

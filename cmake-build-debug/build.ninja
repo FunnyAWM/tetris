@@ -77,7 +77,6 @@ build CMakeFiles/tetris.dir/game.cpp.obj: CXX_COMPILER__tetris_unscanned_Debug C
 
 build tetris.exe: CXX_EXECUTABLE_LINKER__tetris_Debug CMakeFiles/tetris.dir/main.cpp.obj CMakeFiles/tetris.dir/core.cpp.obj CMakeFiles/tetris.dir/game.cpp.obj
   FLAGS = -O0 -Wall -g
-  LINK_FLAGS = -static
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\tetris.dir
   POST_BUILD = cd .
