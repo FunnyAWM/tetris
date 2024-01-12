@@ -116,28 +116,28 @@ void moveBlock() {
                 case 'W':
                 case 'w':
                 case 72:
-                    cout << "TEST_UP";
+                    rotate();
                     break;
                 case 'A':
                 case 'a':
                 case 75:
-                    cout << "TEST_LEFT";
+                    moveLeft();
                     break;
                 case 'D':
                 case 'd':
                 case 77:
-                    cout << "TEST_RIGHT";
+                    moveRight();
                     break;
                 case 'S':
                 case 's':
                 case 80:
-                    cout << "TEST_DOWN";
+                    moveDown();
                     break;
                 case 32:
-                    cout << "TEST_SPACE";
+                    pause();
                     break;
                 case 13:
-                    cout << "TEST_ENTER";
+                    moveBottom();
                     break;
                 default:
                     break;
