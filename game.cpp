@@ -80,10 +80,10 @@ void displayLevel(int num) {
 void generateBlock(int x, int y, int color) {
     std::default_random_engine seed;
     std::mt19937 gen(seed());
-    std::uniform_int_distribution<> index(0,6);
-    std::uniform_int_distribution<> status(0,3);
-    blockIndex=index(gen);
-    blockStatus=status(gen);
+    std::uniform_int_distribution<> index(0, 6);
+    std::uniform_int_distribution<> status(0, 3);
+    blockIndex = index(gen);
+    blockStatus = status(gen);
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
             if (blockShape[blockIndex][blockStatus][i][j] == 1) {
@@ -98,20 +98,20 @@ void generateBlock(int x, int y, int color) {
     }
 }
 
-void deleteBlock(int x,int y){
-    for(int i=0;i<4;i++){
-        for(int j=0;j<4;j++){
-            if(blockShape[blockIndex][blockStatus][i][j]==1){
-                setPosition(x+j,y+i);
+void deleteBlock(int x, int y) {
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            if (blockShape[blockIndex][blockStatus][i][j] == 1) {
+                setPosition(x + j, y + i);
                 cout << "  ";
             }
         }
     }
 }
 
-void moveBlock(){
-    for(;;){
-        if(kbhit()){
+void moveBlock() {
+    for (;;) {
+        if (kbhit()) {
             switch (getch()) {
                 case 'W':
                 case 'w':
