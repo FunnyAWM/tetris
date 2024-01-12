@@ -16,7 +16,9 @@ void displayUI();
 
 void displayLevel(int);
 
-void generateBlock(int, int, int);
+void generateBlock();
+
+void displayBlock(int, int, int);
 
 void deleteBlock(int, int);
 

@@ -77,13 +77,16 @@ void displayLevel(int num) {
     cout << "µÈ¼¶£º" << level << endl;
 }
 
-void generateBlock(int x, int y, int color) {
+void generateBlock() {
     std::default_random_engine seed;
     std::mt19937 gen(seed());
     std::uniform_int_distribution<> index(0, 6);
     std::uniform_int_distribution<> status(0, 3);
     blockIndex = index(gen);
     blockStatus = status(gen);
+}
+
+void displayBlock(int x, int y, int color) {
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
             if (blockShape[blockIndex][blockStatus][i][j] == 1) {
@@ -110,40 +113,38 @@ void deleteBlock(int x, int y) {
 }
 
 void moveBlock() {
-    for (;;) {
-        if (kbhit()) {
-            switch (getch()) {
-                case 'W':
-                case 'w':
-                case 72:
-                    rotate();
-                    break;
-                case 'A':
-                case 'a':
-                case 75:
-                    moveLeft();
-                    break;
-                case 'D':
-                case 'd':
-                case 77:
-                    moveRight();
-                    break;
-                case 'S':
-                case 's':
-                case 80:
-                    moveDown();
-                    break;
-                case 32:
-                    pause();
-                    break;
-                case 13:
-                    moveBottom();
-                    break;
-                default:
-                    break;
-            }
-            cout << endl;
+    if (kbhit()) {
+        switch (getch()) {
+            case 'W':
+            case 'w':
+            case 72:
+                rotate();
+                break;
+            case 'A':
+            case 'a':
+            case 75:
+                moveLeft();
+                break;
+            case 'D':
+            case 'd':
+            case 77:
+                moveRight();
+                break;
+            case 'S':
+            case 's':
+            case 80:
+                moveDown();
+                break;
+            case 32:
+                pause();
+                break;
+            case 13:
+                moveBottom();
+                break;
+            default:
+                break;
         }
+        cout << endl;
     }
 }
 
