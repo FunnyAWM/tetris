@@ -401,7 +401,7 @@ void again() {
     setColor(0);
     system("cls");
     for (int i = 1; i < 24; i++) {
-        for (int j = 0; j < 15; j++) {
+        for (int j = 1; j < 15; j++) {
             windowShape[i][j] = 0;
         }
     }
