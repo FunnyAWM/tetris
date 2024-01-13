@@ -53,50 +53,62 @@ void gameInit() {
     copyBlock(&CURRENT, &NEXT);
     generateBlock();
     displayBlock(NEXT);
+
     clock_t startTime = clock();
     clock_t stopTime;
-    displayBlock(CURRENT);
-    for (;;) {
+
+    while (1) {
+        // 检测是否有按键按下
         if (kbhit()) {
+            // 判断按键
             switch (getch()) {
-                case 'W':
                 case 'w':
-                case 72:
+                case 'W':
+                case 72:  // 上键
+                    // printf("方块变形");
                     rotate();
                     break;
-                case 'A':
                 case 'a':
-                case 75:
+                case 'A':
+                case 75:  // 左键
+                    // printf("方块左移");
                     moveLeft();
                     break;
-                case 'D':
                 case 'd':
-                case 77:
+                case 'D':
+                case 77:  // 右键
+                    // printf("方块右移");
                     moveRight();
                     break;
-                case 'S':
                 case 's':
-                case 80:
+                case 'S':
+                case 80:  // 下键
+                    // printf("方块加速下落");
                     moveDown();
                     break;
-                case 32:
+                case 32:  // 空格
+                    // printf("暂停");
                     pause();
                     break;
-                case 13:
+                case 13:  // 回车
+                    // printf("方块落底");
                     moveBottom();
                     break;
-                default:
-                    break;
-            }
-            stopTime = clock();
-            if (stopTime - startTime > 0.45 * CLOCKS_PER_SEC) {
-                if (moveDown() == -2) {
-                    break;
-                }
-                startTime = stopTime;
+
             }
         }
+        stopTime = clock();
+        if (stopTime - startTime > 0.45 * CLOCKS_PER_SEC) {
+            if (moveDown() == -2) {
+                break;
+            }
+            startTime = stopTime;
+            clearArea();
+            displayBlock(NEXT);
+        }
     }
+    over();
+    finish();
 }
 
 void displayUI() {
@@ -151,7 +163,7 @@ void generateBlock() {
     std::mt19937 gen(seed());
     std::uniform_int_distribution<> index(0, 6);
     std::uniform_int_distribution<> status(0, 3);
-    std::uniform_int_distribution<> color(0x00, 0x10);
+    std::uniform_int_distribution<> color(0x00, 0x0f);
     NEXT.x = 32;
     NEXT.y = 3;
     NEXT.blockIndex = index(gen);
@@ -166,11 +178,9 @@ void displayBlock(block BLOCK) {
                 setColor(BLOCK.color);
                 setPosition(BLOCK.x + j, BLOCK.y + i);
                 cout << "■";
-            } else {
-                setColor(0);
-                cout << "  ";
             }
         }
+        setColor(0);
         cout << endl;
     }
 }
@@ -191,10 +201,11 @@ int crash(block BLOCK) {
         for (int j = 0; j < 4; j++) {
             if (blockShape[BLOCK.blockIndex][BLOCK.blockStatus][i][j] == 1) {
                 if (windowShape[i + BLOCK.y][j + BLOCK.x - 15] == 1) {
-                    if (CURRENT.x == 22 && CURRENT.y == 1) {
+                    if (BLOCK.x == 22 && BLOCK.y == 1) {
                         return -2;
+                    } else {
+                        return -1;
                     }
-                    return -1;
                 }
             }
         }
@@ -252,7 +263,6 @@ int moveDown() {
         update();
         return -1;
     } else if (crash(CURRENT) == -2) {
-        over();
         return -2;
     }
     displayBlock(CURRENT);
@@ -447,4 +457,13 @@ void start() {
         }
     }
     system("cls");
+}
+
+void clearArea() {
+    for (int i = 31; i < 39; i++) {
+        for (int j = 1; j < 7; j++) {
+            setPosition(i, j);
+            cout << "  ";
+        }
+    }
 }

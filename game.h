@@ -16,7 +16,7 @@ struct block {
     int y;
 };
 
-int crash(block BLOCK);
+int crash(block);
 
 void copyBlock(block *, block *);
 
@@ -33,8 +33,6 @@ void generateBlock();
 void displayBlock(block);
 
 void deleteBlock(block);
-
-void moveBlock();
 
 void moveLeft();
 
@@ -69,5 +67,7 @@ void printStart(int,int);
 void clearStart(int,int);
 
 void start();
+
+void clearArea();
 
 #endif //TETRIS_GAME_H
