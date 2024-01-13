@@ -8,7 +8,7 @@ using std::cin;
 using std::endl;
 using std::getline;
 
-struct block{
+struct block {
     int blockIndex;
     int blockStatus;
     int color;
@@ -16,9 +16,9 @@ struct block{
     int y;
 };
 
-bool crash(block BLOCK);
+int crash(block BLOCK);
 
-void copyBlock(block*,block*);
+void copyBlock(block *, block *);
 
 void renderWindow(int, int);
 
@@ -42,7 +42,7 @@ void moveRight();
 
 void rotate();
 
-void moveDown();
+int moveDown();
 
 void pause();
 
@@ -50,6 +50,24 @@ void moveBottom();
 
 void saveBlock();
 
+void update();
+
+void fullDetect();
+
+void fullDown(int);
+
+void over();
+
+void finish();
+
+void again();
+
 void gameClose();
+
+void printStart(int,int);
+
+void clearStart(int,int);
+
+void start();
 
 #endif //TETRIS_GAME_H

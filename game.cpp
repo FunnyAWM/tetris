@@ -27,6 +27,7 @@ void renderWindow(int x, int y) {
 void gameInit() {
     initHandle();
     setCursorVisibility(0);
+    start();
     std::ifstream fin;
     fin.open("highest.bin", std::ios_base::binary);
     if (!fin.is_open()) {
@@ -52,6 +53,50 @@ void gameInit() {
     copyBlock(&CURRENT, &NEXT);
     generateBlock();
     displayBlock(NEXT);
+    clock_t startTime = clock();
+    clock_t stopTime;
+    displayBlock(CURRENT);
+    for (;;) {
+        if (kbhit()) {
+            switch (getch()) {
+                case 'W':
+                case 'w':
+                case 72:
+                    rotate();
+                    break;
+                case 'A':
+                case 'a':
+                case 75:
+                    moveLeft();
+                    break;
+                case 'D':
+                case 'd':
+                case 77:
+                    moveRight();
+                    break;
+                case 'S':
+                case 's':
+                case 80:
+                    moveDown();
+                    break;
+                case 32:
+                    pause();
+                    break;
+                case 13:
+                    moveBottom();
+                    break;
+                default:
+                    break;
+            }
+            stopTime = clock();
+            if (stopTime - startTime > 0.45 * CLOCKS_PER_SEC) {
+                if (moveDown() == -2) {
+                    break;
+                }
+                startTime = stopTime;
+            }
+        }
+    }
 }
 
 void displayUI() {
@@ -107,7 +152,7 @@ void generateBlock() {
     std::uniform_int_distribution<> index(0, 6);
     std::uniform_int_distribution<> status(0, 3);
     std::uniform_int_distribution<> color(0x00, 0x10);
-    NEXT.x = 33;
+    NEXT.x = 32;
     NEXT.y = 3;
     NEXT.blockIndex = index(gen);
     NEXT.blockStatus = status(gen);
@@ -141,69 +186,33 @@ void deleteBlock(block BLOCK) {
     }
 }
 
-void moveBlock() {
-    for (;;) {
-        if (kbhit()) {
-            switch (getch()) {
-                case 'W':
-                case 'w':
-                case 72:
-                    rotate();
-                    break;
-                case 'A':
-                case 'a':
-                case 75:
-                    moveLeft();
-                    break;
-                case 'D':
-                case 'd':
-                case 77:
-                    moveRight();
-                    break;
-                case 'S':
-                case 's':
-                case 80:
-                    moveDown();
-                    break;
-                case 32:
-                    pause();
-                    break;
-                case 13:
-                    moveBottom();
-                    break;
-                default:
-                    break;
-            }
-            cout << endl;
-        }
-    }
-}
-
-bool crash(block BLOCK) {
+int crash(block BLOCK) {
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
-            if (BLOCK.x == 22 && BLOCK.y == 1) {
-                return false;
-            }
-            if (windowShape[i + BLOCK.y + 1][j + BLOCK.x - 15] == 1 &&
-                blockShape[BLOCK.blockIndex][BLOCK.blockStatus][i][j] == 1) {
-                return true;
+            if (blockShape[BLOCK.blockIndex][BLOCK.blockStatus][i][j] == 1) {
+                if (windowShape[i + BLOCK.y][j + BLOCK.x - 15] == 1) {
+                    if (CURRENT.x == 22 && CURRENT.y == 1) {
+                        return -2;
+                    }
+                    return -1;
+                }
             }
         }
     }
-    return false;
+    return 0;
 }
 
 void copyBlock(block *current, block *next) {
     *current = *next;
     (*current).x = 22;
     (*current).y = 1;
+    generateBlock();
 }
 
 void moveLeft() {
     deleteBlock(CURRENT);
     CURRENT.x -= 1;
-    if (crash(CURRENT)) {
+    if (crash(CURRENT) == -1) {
         CURRENT.x += 1;
     }
     displayBlock(CURRENT);
@@ -212,7 +221,7 @@ void moveLeft() {
 void moveRight() {
     deleteBlock(CURRENT);
     CURRENT.x += 1;
-    if (crash(CURRENT)) {
+    if (crash(CURRENT) == -1) {
         CURRENT.x -= 1;
     }
     displayBlock(CURRENT);
@@ -222,7 +231,7 @@ void rotate() {
     deleteBlock(CURRENT);
     CURRENT.blockStatus += 1;
     CURRENT.blockStatus %= 4;
-    if (crash(CURRENT)) {
+    if (crash(CURRENT) == -1) {
         if (CURRENT.blockStatus == 0) {
             CURRENT.blockStatus = 3;
         } else {
@@ -232,8 +241,22 @@ void rotate() {
     displayBlock(CURRENT);
 }
 
-void moveDown() {
-    //TODO
+int moveDown() {
+    deleteBlock(CURRENT);
+    CURRENT.y += 1;
+    if (crash(CURRENT) == -1) {
+        CURRENT.y -= 1;
+        saveBlock();
+        fullDetect();
+        copyBlock(&CURRENT, &NEXT);
+        update();
+        return -1;
+    } else if (crash(CURRENT) == -2) {
+        over();
+        return -2;
+    }
+    displayBlock(CURRENT);
+    return 0;
 }
 
 void pause() {
@@ -245,7 +268,24 @@ void pause() {
 }
 
 void moveBottom() {
-    //TODO
+    for (;;) {
+        deleteBlock(CURRENT);
+        CURRENT.y += 1;
+        if (crash(CURRENT) == -1) {
+            CURRENT.y -= 1;
+            saveBlock();
+            fullDetect();
+            copyBlock(&CURRENT, &NEXT);
+            generateBlock();
+            return;
+        } else if (crash(CURRENT) == -2) {
+            over();
+            return;
+        } else {
+            ++CURRENT.y;
+        }
+    }
+    displayBlock(CURRENT);
 }
 
 void saveBlock() {
@@ -254,6 +294,48 @@ void saveBlock() {
             if (blockShape[CURRENT.blockIndex][CURRENT.blockStatus][i][j] == 1) {
                 windowShape[i + CURRENT.y][j + CURRENT.x - 15] = 1;
             }
+        }
+    }
+}
+
+void update() {
+    for (int i = 1; i < 24; i++) {
+        for (int j = 1; j < 15; j++) {
+            if (windowShape[i][j] == 1) {
+                setColor(0x0e);
+                setPosition(j + 15, i);
+                cout << "■";
+            } else {
+                setColor(0);
+                setPosition(j + 15, i);
+                cout << "  ";
+            }
+        }
+    }
+}
+
+void fullDetect() {
+    int num = 0;
+    for (int i = 23; i > 1; i--) {
+        int total = 0;
+        for (int j = 1; j < 15; j++) {
+            if (windowShape[i][j] == 1) {
+                total++;
+            }
+        }
+        if (total == 14) {
+            fullDown(i);
+            i += 1;
+            num += 1;
+        }
+    }
+    displayLevel(num);
+}
+
+void fullDown(int lines) {
+    for (int i = lines; i > 1; i--) {
+        for (int j = 1; j < 15; j++) {
+            windowShape[i][j] = windowShape[i - 1][j];
         }
     }
 }
@@ -267,4 +349,102 @@ void gameClose() {
     fout.open("highest.bin", std::ios_base::binary | std::ios_base::trunc);
     fout << highest << endl;
     fout.close();
+}
+
+void over() {
+    setColor(0x76);
+    for (int i = 23; i > 0; i--) {
+        for (int j = 14; j > 0; j--) {
+            setPosition(j + 15, i);
+            cout << "*";
+            Sleep(5);
+        }
+    }
+    setColor(0);
+}
+
+void finish() {
+    setColor(0x0d);
+    setPosition(21, 8);
+    cout << "游戏结束";
+    setPosition(16, 9);
+    cout << "按Y重新开始";
+    setPosition(23, 9);
+    cout << "按N退出游戏";
+    switch (getch()) {
+        case 'Y':
+        case 'y':
+            again();
+            break;
+        case 'N':
+        case 'n':
+            gameClose();
+            break;
+        default:
+            finish();
+            break;
+    }
+}
+
+void again() {
+    setColor(0);
+    system("cls");
+    for (int i = 1; i < 24; i++) {
+        for (int j = 0; j < 15; j++) {
+            windowShape[i][j] = 0;
+        }
+    }
+    gameInit();
+}
+
+void printStart(int x, int y) {
+    int color = rand() % 0x10;
+    if (color == 0x00) {
+        color = 0x0f;
+    }
+    setColor(color);
+    setPosition(x, y);
+    printf("■■■■■  ■■■■■  ■■■■■  ■■■■  ■■■    ■■■■");
+    setPosition(x, y + 1);
+    printf("    ■      ■              ■      ■    ■    ■    ■");
+    setPosition(x, y + 2);
+    printf("    ■      ■■■■        ■      ■■■■    ■      ■■■");
+    setPosition(x, y + 3);
+    printf("    ■      ■              ■      ■  ■      ■            ■");
+    setPosition(x, y + 4);
+    printf("    ■      ■■■■■      ■      ■    ■  ■■■   ■■■■");
+    setPosition(20, 15);
+    printf("按任意键开始游戏");
+}
+
+void clearStart(int x, int y) {
+    for (int i = y; i <= y + 4; i++) {
+        for (int j = x; j <= x + 33; j++) {
+            setPosition(j, i);
+            cout << "  ";
+        }
+    }
+}
+
+void start() {
+    clock_t time1, time2;
+    time1 = clock();
+    int x = 5;
+    printStart(x, 5);
+    for (;;) {
+        time2 = clock();
+        if (time2 - time1 > 300) {
+            time1 = time2;
+            clearStart(x, 5);
+            printStart(++x, 5);
+            if (x == 25) {
+                clearStart(x, 5);
+                x = 0;
+            }
+        }
+        if (kbhit()) {
+            break;
+        }
+    }
+    system("cls");
 }
