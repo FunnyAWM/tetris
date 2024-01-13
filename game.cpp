@@ -25,6 +25,7 @@ void renderWindow(int x, int y) {
 }
 
 void gameInit() {
+    int gameRun = 1;
     initHandle();
     setCursorVisibility(0);
     start();
@@ -57,7 +58,7 @@ void gameInit() {
     clock_t startTime = clock();
     clock_t stopTime;
 
-    while (1) {
+    while (gameRun) {
         // 检测是否有按键按下
         if (kbhit()) {
             // 判断按键
@@ -100,7 +101,7 @@ void gameInit() {
         stopTime = clock();
         if (stopTime - startTime > 0.45 * CLOCKS_PER_SEC) {
             if (moveDown() == -2) {
-                break;
+                gameRun = 0;
             }
             startTime = stopTime;
             clearArea();
@@ -201,7 +202,7 @@ int crash(block BLOCK) {
         for (int j = 0; j < 4; j++) {
             if (blockShape[BLOCK.blockIndex][BLOCK.blockStatus][i][j] == 1) {
                 if (windowShape[i + BLOCK.y][j + BLOCK.x - 15] == 1) {
-                    if (BLOCK.x == 22 && BLOCK.y == 1) {
+                    if (BLOCK.x == 22 && BLOCK.y == 2) {
                         return -2;
                     } else {
                         return -1;
@@ -366,7 +367,7 @@ void over() {
     for (int i = 23; i > 0; i--) {
         for (int j = 14; j > 0; j--) {
             setPosition(j + 15, i);
-            cout << "*";
+            cout << "★";
             Sleep(5);
         }
     }
