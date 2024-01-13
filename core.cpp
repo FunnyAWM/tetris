@@ -24,13 +24,6 @@ void setPosition(int x, int y) {
     SetConsoleCursorPosition(handle, position);
 }
 
-void setWindowSize(int width, int height) {
-    COORD size = {static_cast<SHORT>(width), static_cast<SHORT>(height)};
-    SetConsoleScreenBufferSize(handle, size);
-    SMALL_RECT windowSize = {0, 0, static_cast<SHORT>(width - 1), static_cast<SHORT>(height - 1)};
-    SetConsoleWindowInfo(handle, 1, &windowSize);
-}
-
 void setTitle(const std::string &title) {
     SetConsoleTitle(title.c_str());
 }

@@ -2,12 +2,23 @@
 #define TETRIS_GAME_H
 
 #include <iostream>
-#include <mutex>
 
 using std::cout;
 using std::cin;
 using std::endl;
 using std::getline;
+
+struct block{
+    int blockIndex;
+    int blockStatus;
+    int color;
+    int x;
+    int y;
+};
+
+bool crash(block BLOCK);
+
+void copyBlock(block*,block*);
 
 void renderWindow(int, int);
 
@@ -19,11 +30,11 @@ void displayLevel(int);
 
 void generateBlock();
 
-void displayBlock(int, int, int);
+void displayBlock(block);
 
-void deleteBlock(int, int);
+void deleteBlock(block);
 
-unsigned long moveBlock(void *pVoid);
+void moveBlock();
 
 void moveLeft();
 
@@ -36,5 +47,9 @@ void moveDown();
 void pause();
 
 void moveBottom();
+
+void saveBlock();
+
+void gameClose();
 
 #endif //TETRIS_GAME_H

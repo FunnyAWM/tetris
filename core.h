@@ -14,8 +14,6 @@ void setCursorVisibility(int);
 
 void setPosition(int, int);
 
-void setWindowSize(int, int);
-
 void setTitle(const string &);
 
 void closeHandle();

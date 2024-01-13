@@ -1,18 +1,16 @@
 #include <conio.h>
+#include <fstream>
 #include <random>
 #include "game.h"
 #include "core.h"
 #include "data.h"
 
-
-
 //游戏窗口渲染
 int level = 1;
 int score = 0;
-int blockIndex;
-int blockStatus;
-extern std::mutex mtx;
+int highest = 0;
 
+extern block CURRENT, NEXT;
 
 void renderWindow(int x, int y) {
     for (int i = 0; i < 25; i++) {
@@ -29,10 +27,31 @@ void renderWindow(int x, int y) {
 void gameInit() {
     initHandle();
     setCursorVisibility(0);
+    std::ifstream fin;
+    fin.open("highest.bin", std::ios_base::binary);
+    if (!fin.is_open()) {
+        std::ofstream fout;
+        fout.open("highest.bin", std::ios_base::binary | std::ios_base::trunc);
+        if (!fout.is_open()) {
+            std::cerr << "Failed to create file.";
+            exit(EXIT_FAILURE);
+        }
+        fout << "0" << endl;
+        fout.close();
+        fin.open("highest.bin", std::ios_base::binary);
+        fin >> highest;
+        fin.close();
+    }
+    fin >> highest;
+    fin.close();
     setTitle("Tetris");
     renderWindow(15, 0);
     displayUI();
     displayLevel(0);
+    generateBlock();
+    copyBlock(&CURRENT, &NEXT);
+    generateBlock();
+    displayBlock(NEXT);
 }
 
 void displayUI() {
@@ -74,29 +93,36 @@ void displayLevel(int num) {
             break;
     }
     setColor(0x09);
-    setPosition(9, 3);
+    setPosition(6, 3);
     cout << "分数：" << score << endl;
-    setPosition(9, 4);
+    setPosition(6, 4);
+    cout << "历史最高分：" << highest << endl;
+    setPosition(6, 5);
     cout << "等级：" << level << endl;
 }
 
 void generateBlock() {
-    std::default_random_engine seed;
+    std::random_device seed;
     std::mt19937 gen(seed());
     std::uniform_int_distribution<> index(0, 6);
     std::uniform_int_distribution<> status(0, 3);
-    blockIndex = index(gen);
-    blockStatus = status(gen);
+    std::uniform_int_distribution<> color(0x00, 0x10);
+    NEXT.x = 33;
+    NEXT.y = 3;
+    NEXT.blockIndex = index(gen);
+    NEXT.blockStatus = status(gen);
+    NEXT.color = color(gen);
 }
 
-void displayBlock(int x, int y, int color) {
+void displayBlock(block BLOCK) {
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
-            if (blockShape[blockIndex][blockStatus][i][j] == 1) {
-                setColor(color);
-                setPosition(x + j, y + i);
+            if (blockShape[BLOCK.blockIndex][BLOCK.blockStatus][i][j] == 1) {
+                setColor(BLOCK.color);
+                setPosition(BLOCK.x + j, BLOCK.y + i);
                 cout << "■";
             } else {
+                setColor(0);
                 cout << "  ";
             }
         }
@@ -104,21 +130,20 @@ void displayBlock(int x, int y, int color) {
     }
 }
 
-void deleteBlock(int x, int y) {
+void deleteBlock(block BLOCK) {
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
-            if (blockShape[blockIndex][blockStatus][i][j] == 1) {
-                setPosition(x + j, y + i);
+            if (blockShape[BLOCK.blockIndex][BLOCK.blockStatus][i][j] == 1) {
+                setPosition(BLOCK.x + j, BLOCK.y + i);
                 cout << "  ";
             }
         }
     }
 }
 
-DWORD moveBlock(LPVOID pVoid) {
+void moveBlock() {
     for (;;) {
         if (kbhit()) {
-            mtx.lock();
             switch (getch()) {
                 case 'W':
                 case 'w':
@@ -150,23 +175,61 @@ DWORD moveBlock(LPVOID pVoid) {
                     break;
             }
             cout << endl;
-            mtx.unlock();
         }
     }
 }
 
+bool crash(block BLOCK) {
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            if (BLOCK.x == 22 && BLOCK.y == 1) {
+                return false;
+            }
+            if (windowShape[i + BLOCK.y + 1][j + BLOCK.x - 15] == 1 &&
+                blockShape[BLOCK.blockIndex][BLOCK.blockStatus][i][j] == 1) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+void copyBlock(block *current, block *next) {
+    *current = *next;
+    (*current).x = 22;
+    (*current).y = 1;
+}
+
 void moveLeft() {
-    //TODO
+    deleteBlock(CURRENT);
+    CURRENT.x -= 1;
+    if (crash(CURRENT)) {
+        CURRENT.x += 1;
+    }
+    displayBlock(CURRENT);
 }
 
 void moveRight() {
-    //TODO
+    deleteBlock(CURRENT);
+    CURRENT.x += 1;
+    if (crash(CURRENT)) {
+        CURRENT.x -= 1;
+    }
+    displayBlock(CURRENT);
 }
 
 void rotate() {
-    blockStatus++;
-    blockStatus%=4;
-    //TODO
+    deleteBlock(CURRENT);
+    CURRENT.blockStatus += 1;
+    CURRENT.blockStatus %= 4;
+    if (crash(CURRENT)) {
+        if (CURRENT.blockStatus == 0) {
+            CURRENT.blockStatus = 3;
+        } else {
+            CURRENT.blockStatus -= 1;
+        }
+    }
+    displayBlock(CURRENT);
 }
 
 void moveDown() {
@@ -174,9 +237,34 @@ void moveDown() {
 }
 
 void pause() {
-    //TODO
+    for (;;) {
+        if (getch() == 32) {
+            break;
+        }
+    }
 }
 
 void moveBottom() {
     //TODO
+}
+
+void saveBlock() {
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            if (blockShape[CURRENT.blockIndex][CURRENT.blockStatus][i][j] == 1) {
+                windowShape[i + CURRENT.y][j + CURRENT.x - 15] = 1;
+            }
+        }
+    }
+}
+
+void gameClose() {
+    closeHandle();
+    if (score > highest) {
+        highest = score;
+    }
+    std::ofstream fout;
+    fout.open("highest.bin", std::ios_base::binary | std::ios_base::trunc);
+    fout << highest << endl;
+    fout.close();
 }
