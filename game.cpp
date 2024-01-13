@@ -6,7 +6,6 @@
 #include "data.h"
 
 //游戏窗口渲染
-int level = 1;
 int score = 0;
 int highest = 0;
 
@@ -155,8 +154,6 @@ void displayLevel(int num) {
     cout << "分数：" << score << endl;
     setPosition(6, 4);
     cout << "历史最高分：" << highest << endl;
-    setPosition(6, 5);
-    cout << "等级：" << level << endl;
 }
 
 void generateBlock() {
