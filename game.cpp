@@ -164,7 +164,7 @@ void generateBlock() {
     std::mt19937 gen(seed());
     std::uniform_int_distribution<> index(0, 6);
     std::uniform_int_distribution<> status(0, 3);
-    std::uniform_int_distribution<> color(0x00, 0x0f);
+    std::uniform_int_distribution<> color(0x01, 0x0f);
     NEXT.x = 32;
     NEXT.y = 3;
     NEXT.blockIndex = index(gen);
@@ -288,15 +288,13 @@ void moveBottom() {
             fullDetect();
             copyBlock(&CURRENT, &NEXT);
             generateBlock();
+            update();
             return;
         } else if (crash(CURRENT) == -2) {
             over();
             return;
-        } else {
-            ++CURRENT.y;
         }
     }
-    displayBlock(CURRENT);
 }
 
 void saveBlock() {
