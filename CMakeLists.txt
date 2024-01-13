@@ -9,3 +9,5 @@ add_executable(tetris
         main.cpp
         core.cpp
         game.cpp)
+
+target_link_libraries(tetris WINMM.LIB)

@@ -1,11 +1,11 @@
 #include <conio.h>
 #include <fstream>
 #include <random>
+#include <thread>
 #include "game.h"
 #include "core.h"
 #include "data.h"
 
-//ÓÎÏ·´°¿ÚäÖÈ¾
 int score = 0;
 int highest = 0;
 
