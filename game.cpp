@@ -6,7 +6,7 @@
 #include "core.h"
 #include "data.h"
 
-/**@游戏核心代码*/
+///@游戏核心代码
 
 const int WINDOW_WIDTH = 26;
 const int WINDOW_HEIGHT = 25;
@@ -19,18 +19,19 @@ enum Direction {
     UP = 72, DOWN = 80, LEFT = 75, RIGHT = 77, SPACE = 32, ENTER = 13
 };
 
-extern block CURRENT, NEXT;
+block CURRENT, NEXT;
 
 void setDifficulty() {
-    setPosition(15,0);
+    setColor(0x07);
+    setPosition(15, 0);
     cout << "请选择游戏难度。\n";
-    setPosition(15,1);
+    setPosition(15, 1);
     cout << "1.简单\n";
-    setPosition(15,2);
+    setPosition(15, 2);
     cout << "2.中等\n";
-    setPosition(15,3);
+    setPosition(15, 3);
     cout << "3.困难\n";
-    setPosition(15,4);
+    setPosition(15, 4);
     setCursorVisibility(1);
     int difficulty;
     cin >> difficulty;

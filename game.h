@@ -61,9 +61,9 @@ void again();
 
 void gameClose();
 
-void printStart(int,int);
+void printStart(int, int);
 
-void clearStart(int,int);
+void clearStart(int, int);
 
 void start();
 
