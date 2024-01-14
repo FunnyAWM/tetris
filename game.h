@@ -29,9 +29,9 @@ void displayScore(int);
 
 void generateBlock();
 
-inline void displayBlock(const block);
+inline void displayBlock(block);
 
-void deleteBlock(block);
+inline void deleteBlock(block);
 
 void moveLeft();
 
@@ -39,7 +39,7 @@ void moveRight();
 
 void rotate();
 
-int moveDown();
+inline int moveDown();
 
 void pause();
 
@@ -69,6 +69,6 @@ void start();
 
 void readHighest();
 
-void clearArea();
+inline void clearArea();
 
 #endif //TETRIS_GAME_H

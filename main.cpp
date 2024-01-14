@@ -7,7 +7,6 @@ using std::cin;
 using std::endl;
 block CURRENT, NEXT;
 
-
 int main(int argc, char *argv[]) {
     if (argc == 2 && strcmp(argv[1], "-clear") == 0) {
         cout << "This is a developer only feature.\nWould you continue?[y/N]";

@@ -174,7 +174,7 @@ inline void displayBlock(const block BLOCK) {
 }
 
 
-void deleteBlock(block BLOCK) {
+inline void deleteBlock(block BLOCK) {
     for (int i = 0; i < BLOCK_SIZE; i++) {
         for (int j = 0; j < BLOCK_SIZE; j++) {
             if (blockShape[BLOCK.blockIndex][BLOCK.blockStatus][i][j] == 1) {
@@ -241,7 +241,7 @@ void rotate() {
     displayBlock(CURRENT);
 }
 
-int moveDown() {
+inline int moveDown() {
     deleteBlock(CURRENT);
     CURRENT.y += 1;
     if (crash(CURRENT) == -1) {
@@ -467,7 +467,7 @@ void readHighest() {
     fin.close();
 }
 
-void clearArea() {
+inline void clearArea() {
     for (int i = 31; i < 39; i++) {
         for (int j = 1; j < 7; j++) {
             setPosition(i, j);
