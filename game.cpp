@@ -11,14 +11,46 @@
 const int WINDOW_WIDTH = 26;
 const int WINDOW_HEIGHT = 25;
 const int BLOCK_SIZE = 4;
-const int GAME_SPEED = 0.45 * CLOCKS_PER_SEC;
+int GAME_SPEED;
 int score = 0;
 int highest = 0;
+int level = 0;
 enum Direction {
     UP = 72, DOWN = 80, LEFT = 75, RIGHT = 77, SPACE = 32, ENTER = 13
 };
 
 extern block CURRENT, NEXT;
+
+void setDifficulty() {
+    setPosition(15,0);
+    cout << "请选择游戏难度。\n";
+    setPosition(15,1);
+    cout << "1.简单\n";
+    setPosition(15,2);
+    cout << "2.中等\n";
+    setPosition(15,3);
+    cout << "3.困难\n";
+    setPosition(15,4);
+    setCursorVisibility(1);
+    int difficulty;
+    cin >> difficulty;
+    switch (difficulty) {
+        case 1:
+            GAME_SPEED = 0.6 * CLOCKS_PER_SEC;
+            break;
+        case 2:
+            GAME_SPEED = 0.4 * CLOCKS_PER_SEC;
+            break;
+        case 3:
+            GAME_SPEED = 0.2 * CLOCKS_PER_SEC;
+        default:
+            GAME_SPEED = 0.6 * CLOCKS_PER_SEC;
+            break;
+    }
+    level = difficulty;
+    setCursorVisibility(0);
+    update();
+}
 
 void renderWindow(int x, int y) {
     for (int i = 0; i < WINDOW_HEIGHT; i++) {
@@ -33,11 +65,12 @@ void renderWindow(int x, int y) {
 }
 
 void gameInit() {
-    int gameRun = 1;
+    bool gameRun = 1;
     initHandle();
     setCursorVisibility(0);
-    start();
     setTitle("Tetris");
+    start();
+    setDifficulty();
 
     renderWindow(15, 0);
     readHighest();
@@ -83,13 +116,12 @@ void gameInit() {
                 case ENTER:
                     moveBottom();
                     break;
-
             }
         }
         stopTime = clock();
         if (stopTime - startTime > GAME_SPEED) {
             if (moveDown() == -2) {
-                gameRun = 0;
+                gameRun = !gameRun;
             }
             startTime = stopTime;
             clearArea();
@@ -143,6 +175,8 @@ void displayScore(int num) {
     cout << "分数：" << score << endl;
     setPosition(6, 4);
     cout << "历史最高：" << highest << endl;
+    setPosition(6, 5);
+    cout << "难度等级：" << level << endl;
 }
 
 void generateBlock() {
