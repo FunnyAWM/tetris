@@ -25,11 +25,11 @@ void gameInit();
 
 void displayUI();
 
-void displayLevel(int);
+void displayScore(int);
 
 void generateBlock();
 
-void displayBlock(block);
+inline void displayBlock(const block);
 
 void deleteBlock(block);
 
@@ -66,6 +66,8 @@ void printStart(int,int);
 void clearStart(int,int);
 
 void start();
+
+void readHighest();
 
 void clearArea();
 

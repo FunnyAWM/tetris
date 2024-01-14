@@ -1,7 +1,7 @@
 #ifndef TETRIS_DATA_H
 #define TETRIS_DATA_H
 
-//数据模块
+///@游戏数据模块
 
 int windowShape[25][26] =
         {

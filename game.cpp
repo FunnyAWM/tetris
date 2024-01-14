@@ -6,14 +6,23 @@
 #include "core.h"
 #include "data.h"
 
+/**@游戏核心代码*/
+
+const int WINDOW_WIDTH = 26;
+const int WINDOW_HEIGHT = 25;
+const int BLOCK_SIZE = 4;
+const int GAME_SPEED = 0.45 * CLOCKS_PER_SEC;
 int score = 0;
 int highest = 0;
+enum Direction {
+    UP = 72, DOWN = 80, LEFT = 75, RIGHT = 77, SPACE = 32, ENTER = 13
+};
 
 extern block CURRENT, NEXT;
 
 void renderWindow(int x, int y) {
-    for (int i = 0; i < 25; i++) {
-        for (int j = 0; j < 26; j++) {
+    for (int i = 0; i < WINDOW_HEIGHT; i++) {
+        for (int j = 0; j < WINDOW_WIDTH; j++) {
             if (windowShape[i][j] == 1) {
                 setColor(0xc0);
                 setPosition(j + x, i + y);
@@ -28,27 +37,13 @@ void gameInit() {
     initHandle();
     setCursorVisibility(0);
     start();
-    std::ifstream fin;
-    fin.open("highest.bin", std::ios_base::binary);
-    if (!fin.is_open()) {
-        std::ofstream fout;
-        fout.open("highest.bin", std::ios_base::binary | std::ios_base::trunc);
-        if (!fout.is_open()) {
-            std::cerr << "Failed to create file.";
-            exit(EXIT_FAILURE);
-        }
-        fout << "0" << endl;
-        fout.close();
-        fin.open("highest.bin", std::ios_base::binary);
-        fin >> highest;
-        fin.close();
-    }
-    fin >> highest;
-    fin.close();
     setTitle("Tetris");
+
     renderWindow(15, 0);
+    readHighest();
+
     displayUI();
-    displayLevel(0);
+    displayScore(0);
     generateBlock();
     copyBlock(&CURRENT, &NEXT);
     generateBlock();
@@ -64,41 +59,35 @@ void gameInit() {
             switch (getch()) {
                 case 'w':
                 case 'W':
-                case 72:  // 上键
-                    // printf("方块变形");
+                case UP:
                     rotate();
                     break;
                 case 'a':
                 case 'A':
-                case 75:  // 左键
-                    // printf("方块左移");
+                case LEFT:
                     moveLeft();
                     break;
                 case 'd':
                 case 'D':
-                case 77:  // 右键
-                    // printf("方块右移");
+                case RIGHT:
                     moveRight();
                     break;
                 case 's':
                 case 'S':
-                case 80:  // 下键
-                    // printf("方块加速下落");
+                case DOWN:
                     moveDown();
                     break;
-                case 32:  // 空格
-                    // printf("暂停");
+                case SPACE:
                     pause();
                     break;
-                case 13:  // 回车
-                    // printf("方块落底");
+                case ENTER:
                     moveBottom();
                     break;
 
             }
         }
         stopTime = clock();
-        if (stopTime - startTime > 0.45 * CLOCKS_PER_SEC) {
+        if (stopTime - startTime > GAME_SPEED) {
             if (moveDown() == -2) {
                 gameRun = 0;
             }
@@ -130,7 +119,7 @@ void displayUI() {
     cout << "按 回车 直接下落\n";
 }
 
-void displayLevel(int num) {
+void displayScore(int num) {
     switch (num) {
         case 0:
             break;
@@ -153,7 +142,7 @@ void displayLevel(int num) {
     setPosition(6, 3);
     cout << "分数：" << score << endl;
     setPosition(6, 4);
-    cout << "历史最高分：" << highest << endl;
+    cout << "历史最高：" << highest << endl;
 }
 
 void generateBlock() {
@@ -169,7 +158,8 @@ void generateBlock() {
     NEXT.color = color(gen);
 }
 
-void displayBlock(block BLOCK) {
+
+inline void displayBlock(const block BLOCK) {
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
             if (blockShape[BLOCK.blockIndex][BLOCK.blockStatus][i][j] == 1) {
@@ -183,9 +173,10 @@ void displayBlock(block BLOCK) {
     }
 }
 
+
 void deleteBlock(block BLOCK) {
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
+    for (int i = 0; i < BLOCK_SIZE; i++) {
+        for (int j = 0; j < BLOCK_SIZE; j++) {
             if (blockShape[BLOCK.blockIndex][BLOCK.blockStatus][i][j] == 1) {
                 setPosition(BLOCK.x + j, BLOCK.y + i);
                 cout << "  ";
@@ -195,8 +186,8 @@ void deleteBlock(block BLOCK) {
 }
 
 int crash(block BLOCK) {
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
+    for (int i = 0; i < BLOCK_SIZE; i++) {
+        for (int j = 0; j < BLOCK_SIZE; j++) {
             if (blockShape[BLOCK.blockIndex][BLOCK.blockStatus][i][j] == 1) {
                 if (windowShape[i + BLOCK.y][j + BLOCK.x - 15] == 1) {
                     if (BLOCK.x == 22 && BLOCK.y == 2) {
@@ -239,7 +230,7 @@ void moveRight() {
 void rotate() {
     deleteBlock(CURRENT);
     CURRENT.blockStatus += 1;
-    CURRENT.blockStatus %= 4;
+    CURRENT.blockStatus %= BLOCK_SIZE;
     if (crash(CURRENT) == -1) {
         if (CURRENT.blockStatus == 0) {
             CURRENT.blockStatus = 3;
@@ -295,8 +286,8 @@ void moveBottom() {
 }
 
 void saveBlock() {
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
+    for (int i = 0; i < BLOCK_SIZE; i++) {
+        for (int j = 0; j < BLOCK_SIZE; j++) {
             if (blockShape[CURRENT.blockIndex][CURRENT.blockStatus][i][j] == 1) {
                 windowShape[i + CURRENT.y][j + CURRENT.x - 15] = 1;
             }
@@ -335,7 +326,7 @@ void fullDetect() {
             num += 1;
         }
     }
-    displayLevel(num);
+    displayScore(num);
 }
 
 void fullDown(int lines) {
@@ -420,7 +411,7 @@ void printStart(int x, int y) {
     setPosition(x, y + 4);
     printf("    ■      ■■■■■      ■      ■    ■  ■■■   ■■■■");
     setPosition(20, 15);
-    printf("按任意键开始游戏");
+    printf("按回车键开始游戏");
 }
 
 void clearStart(int x, int y) {
@@ -443,16 +434,37 @@ void start() {
             time1 = time2;
             clearStart(x, 5);
             printStart(++x, 5);
-            if (x == 25) {
+            if (x == WINDOW_HEIGHT) {
                 clearStart(x, 5);
                 x = 0;
             }
         }
         if (kbhit()) {
+            cin.get();
             break;
         }
     }
     system("cls");
+}
+
+void readHighest() {
+    std::ifstream fin;
+    fin.open("highest.bin", std::ios_base::binary);
+    if (!fin.is_open()) {
+        std::ofstream fout;
+        fout.open("highest.bin", std::ios_base::binary | std::ios_base::trunc);
+        if (!fout.is_open()) {
+            std::cerr << "Failed to create file.";
+            exit(EXIT_FAILURE);
+        }
+        fout << "0" << endl;
+        fout.close();
+        fin.open("highest.bin", std::ios_base::binary);
+        fin >> highest;
+        fin.close();
+    }
+    fin >> highest;
+    fin.close();
 }
 
 void clearArea() {
@@ -462,4 +474,8 @@ void clearArea() {
             cout << "  ";
         }
     }
+    setColor(0x0a);
+    setPosition(31, 1);
+    cout << "下一个方块：";
+    setColor(0);
 }
