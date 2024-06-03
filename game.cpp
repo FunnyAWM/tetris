@@ -19,7 +19,7 @@ enum Direction {
     UP = 72, DOWN = 80, LEFT = 75, RIGHT = 77, SPACE = 32, ENTER = 13
 };
 
-block CURRENT, NEXT;
+Block CURRENT, NEXT;
 
 void setDifficulty() {
     setColor(0x07);
@@ -78,10 +78,11 @@ void gameInit() {
 
     displayUI();
     displayScore(0);
-    generateBlock();
-    copyBlock(&CURRENT, &NEXT);
-    generateBlock();
-    displayBlock(NEXT);
+    NEXT = Block();
+    CURRENT = NEXT;
+    NEXT = Block();
+    NEXT.displaySelf();
+    CURRENT.refresh();
 
     clock_t startTime = clock();
     clock_t stopTime;
@@ -94,39 +95,39 @@ void gameInit() {
                 case 'w':
                 case 'W':
                 case UP:
-                    rotate();
+                    CURRENT.rotate();
                     break;
                 case 'a':
                 case 'A':
                 case LEFT:
-                    moveLeft();
+                    CURRENT.moveLeft();
                     break;
                 case 'd':
                 case 'D':
                 case RIGHT:
-                    moveRight();
+                    CURRENT.moveRight();
                     break;
                 case 's':
                 case 'S':
                 case DOWN:
-                    moveDown();
+                    CURRENT.moveDown();
                     break;
                 case SPACE:
                     pause();
                     break;
                 case ENTER:
-                    moveBottom();
+                    CURRENT.moveBottom();
                     break;
             }
         }
         stopTime = clock();
         if (stopTime - startTime > GAME_SPEED) {
-            if (moveDown() == -2) {
+            if (CURRENT.moveDown() == -2) {
                 gameRun = !gameRun;
             }
             startTime = stopTime;
             clearArea();
-            displayBlock(NEXT);
+            NEXT.displaySelf();
         }
     }
     over();
@@ -180,152 +181,10 @@ void displayScore(int num) {
     cout << "难度等级：" << level << endl;
 }
 
-void generateBlock() {
-    std::random_device seed;
-    std::mt19937 gen(seed());
-    std::uniform_int_distribution<> index(0, 6);
-    std::uniform_int_distribution<> status(0, 3);
-    std::uniform_int_distribution<> color(0x01, 0x0f);
-    NEXT.x = 32;
-    NEXT.y = 3;
-    NEXT.blockIndex = index(gen);
-    NEXT.blockStatus = status(gen);
-    NEXT.color = color(gen);
-}
-
-
-inline void displayBlock(const block BLOCK) {
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
-            if (blockShape[BLOCK.blockIndex][BLOCK.blockStatus][i][j] == 1) {
-                setColor(BLOCK.color);
-                setPosition(BLOCK.x + j, BLOCK.y + i);
-                cout << "■";
-            }
-        }
-        setColor(0);
-        cout << endl;
-    }
-}
-
-
-inline void deleteBlock(block BLOCK) {
-    for (int i = 0; i < BLOCK_SIZE; i++) {
-        for (int j = 0; j < BLOCK_SIZE; j++) {
-            if (blockShape[BLOCK.blockIndex][BLOCK.blockStatus][i][j] == 1) {
-                setPosition(BLOCK.x + j, BLOCK.y + i);
-                cout << "  ";
-            }
-        }
-    }
-}
-
-int crash(block BLOCK) {
-    for (int i = 0; i < BLOCK_SIZE; i++) {
-        for (int j = 0; j < BLOCK_SIZE; j++) {
-            if (blockShape[BLOCK.blockIndex][BLOCK.blockStatus][i][j] == 1) {
-                if (windowShape[i + BLOCK.y][j + BLOCK.x - 15] == 1) {
-                    if (BLOCK.x == 22 && BLOCK.y == 2) {
-                        return -2;
-                    } else {
-                        return -1;
-                    }
-                }
-            }
-        }
-    }
-    return 0;
-}
-
-void copyBlock(block *current, block *next) {
-    *current = *next;
-    (*current).x = 22;
-    (*current).y = 1;
-    generateBlock();
-}
-
-void moveLeft() {
-    deleteBlock(CURRENT);
-    CURRENT.x -= 1;
-    if (crash(CURRENT) == -1) {
-        CURRENT.x += 1;
-    }
-    displayBlock(CURRENT);
-}
-
-void moveRight() {
-    deleteBlock(CURRENT);
-    CURRENT.x += 1;
-    if (crash(CURRENT) == -1) {
-        CURRENT.x -= 1;
-    }
-    displayBlock(CURRENT);
-}
-
-void rotate() {
-    deleteBlock(CURRENT);
-    CURRENT.blockStatus += 1;
-    CURRENT.blockStatus %= BLOCK_SIZE;
-    if (crash(CURRENT) == -1) {
-        if (CURRENT.blockStatus == 0) {
-            CURRENT.blockStatus = 3;
-        } else {
-            CURRENT.blockStatus -= 1;
-        }
-    }
-    displayBlock(CURRENT);
-}
-
-inline int moveDown() {
-    deleteBlock(CURRENT);
-    CURRENT.y += 1;
-    if (crash(CURRENT) == -1) {
-        CURRENT.y -= 1;
-        saveBlock();
-        fullDetect();
-        copyBlock(&CURRENT, &NEXT);
-        update();
-        return -1;
-    } else if (crash(CURRENT) == -2) {
-        return -2;
-    }
-    displayBlock(CURRENT);
-    return 0;
-}
-
 void pause() {
     for (;;) {
         if (getch() == 32) {
             break;
-        }
-    }
-}
-
-void moveBottom() {
-    for (;;) {
-        deleteBlock(CURRENT);
-        CURRENT.y += 1;
-        if (crash(CURRENT) == -1) {
-            CURRENT.y -= 1;
-            saveBlock();
-            fullDetect();
-            copyBlock(&CURRENT, &NEXT);
-            generateBlock();
-            update();
-            return;
-        } else if (crash(CURRENT) == -2) {
-            over();
-            return;
-        }
-    }
-}
-
-void saveBlock() {
-    for (int i = 0; i < BLOCK_SIZE; i++) {
-        for (int j = 0; j < BLOCK_SIZE; j++) {
-            if (blockShape[CURRENT.blockIndex][CURRENT.blockStatus][i][j] == 1) {
-                windowShape[i + CURRENT.y][j + CURRENT.x - 15] = 1;
-            }
         }
     }
 }
@@ -461,17 +320,17 @@ void clearStart(int x, int y) {
 void start() {
     clock_t time1, time2;
     time1 = clock();
-    int x = 5;
-    printStart(x, 5);
+    int a = 5;
+    printStart(a, 5);
     for (;;) {
         time2 = clock();
         if (time2 - time1 > 300) {
             time1 = time2;
-            clearStart(x, 5);
-            printStart(++x, 5);
-            if (x == WINDOW_HEIGHT) {
-                clearStart(x, 5);
-                x = 0;
+            clearStart(a, 5);
+            printStart(++a, 5);
+            if (a == WINDOW_HEIGHT) {
+                clearStart(a, 5);
+                a = 0;
             }
         }
         if (kbhit()) {
@@ -513,4 +372,146 @@ inline void clearArea() {
     setPosition(31, 1);
     cout << "下一个方块：";
     setColor(0);
+}
+
+Block::Block() {
+    std::random_device seed;
+    std::mt19937 gen(seed());
+    std::uniform_int_distribution<> index(0, 6);
+    std::uniform_int_distribution<> status(0, 3);
+    std::uniform_int_distribution<> colorGen(0x01, 0x0f);
+    x = 32;
+    y = 3;
+    blockIndex = index(gen);
+    blockStatus = status(gen);
+    this->color = colorGen(gen);
+}
+
+
+void Block::displaySelf() {
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            if (blockShape[blockIndex][blockStatus][i][j] == 1) {
+                setColor(color);
+                setPosition(x + j, y + i);
+                cout << "■";
+            }
+        }
+        setColor(0);
+        cout << endl;
+    }
+}
+
+void Block::deleteSelf() {
+    for (int i = 0; i < BLOCK_SIZE; i++) {
+        for (int j = 0; j < BLOCK_SIZE; j++) {
+            if (blockShape[blockIndex][blockStatus][i][j] == 1) {
+                setPosition(x + j, y + i);
+                cout << "  ";
+            }
+        }
+    }
+}
+
+int Block::Crash() {
+    for (int i = 0; i < BLOCK_SIZE; i++) {
+        for (int j = 0; j < BLOCK_SIZE; j++) {
+            if (blockShape[blockIndex][blockStatus][i][j] == 1) {
+                if (windowShape[i + y][j + x - 15] == 1) {
+                    if (x == 22 && y == 2) {
+                        return -2;
+                    } else {
+                        return -1;
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+void Block::moveLeft() {
+    deleteSelf();
+    x -= 1;
+    if (Crash() == -1) {
+        x += 1;
+    }
+    displaySelf();
+}
+
+void Block::moveRight() {
+    deleteSelf();
+    x += 1;
+    if (Crash() == -1) {
+        x -= 1;
+    }
+    displaySelf();
+}
+
+void Block::rotate() {
+    deleteSelf();
+    blockStatus += 1;
+    blockStatus %= BLOCK_SIZE;
+    if (Crash() == -1) {
+        if (blockStatus == 0) {
+            blockStatus = 3;
+        } else {
+            blockStatus -= 1;
+        }
+    }
+    displaySelf();
+}
+
+inline int Block::moveDown() {
+    deleteSelf();
+    y += 1;
+    if (Crash() == -1) {
+        y -= 1;
+        saveBlock();
+        fullDetect();
+        CURRENT = NEXT;
+        NEXT = Block();
+        CURRENT.refresh();
+        update();
+        return -1;
+    } else if (Crash() == -2) {
+        return -2;
+    }
+    displaySelf();
+    return 0;
+}
+
+void Block::moveBottom() {
+    for (;;) {
+        deleteSelf();
+        y += 1;
+        if (Crash() == -1) {
+            y -= 1;
+            saveBlock();
+            fullDetect();
+            CURRENT = NEXT;
+            NEXT = Block();
+            CURRENT.refresh();
+            update();
+            return;
+        } else if (Crash() == -2) {
+            over();
+            return;
+        }
+    }
+}
+
+void Block::saveBlock() {
+    for (int i = 0; i < BLOCK_SIZE; i++) {
+        for (int j = 0; j < BLOCK_SIZE; j++) {
+            if (blockShape[blockIndex][blockStatus][i][j] == 1) {
+                windowShape[i + y][j + x - 15] = 1;
+            }
+        }
+    }
+}
+
+void Block::refresh() {
+    x=22;
+    y=1;
 }

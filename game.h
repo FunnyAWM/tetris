@@ -7,17 +7,39 @@ using std::cout;
 using std::cin;
 using std::endl;
 
-struct block {
+class Block {
+private:
     int blockIndex;
     int blockStatus;
     int color;
     int x;
     int y;
+public:
+
+    Block();
+
+    void displaySelf();
+
+    void deleteSelf();
+
+    int Crash();
+
+    void moveLeft();
+
+    void moveRight();
+
+    void rotate();
+
+    inline int moveDown();
+
+    void moveBottom();
+
+    void saveBlock();
+
+    void refresh();
+
+    ~Block() = default;
 };
-
-int crash(block);
-
-void copyBlock(block *, block *);
 
 void renderWindow(int, int);
 
@@ -27,25 +49,7 @@ void displayUI();
 
 void displayScore(int);
 
-void generateBlock();
-
-inline void displayBlock(block);
-
-inline void deleteBlock(block);
-
-void moveLeft();
-
-void moveRight();
-
-void rotate();
-
-inline int moveDown();
-
 void pause();
-
-void moveBottom();
-
-void saveBlock();
 
 void update();
 
