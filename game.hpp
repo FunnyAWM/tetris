@@ -1,5 +1,5 @@
-#ifndef TETRIS_GAME_H
-#define TETRIS_GAME_H
+#ifndef TETRIS_GAME_HPP
+#define TETRIS_GAME_HPP
 
 #include <iostream>
 
@@ -75,4 +75,4 @@ void readHighest();
 
 inline void clearArea();
 
-#endif //TETRIS_GAME_H
+#endif //TETRIS_GAME_HPP

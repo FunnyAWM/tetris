@@ -1,5 +1,5 @@
-#ifndef TETRIS_DATA_H
-#define TETRIS_DATA_H
+#ifndef TETRIS_DATA_HPP
+#define TETRIS_DATA_HPP
 
 ///@游戏数据模块
 
@@ -76,4 +76,4 @@ int blockShape[7][4][4][4] =
                         {{1, 1, 0, 0}, {1, 1, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}
                 }
         };
-#endif //TETRIS_DATA_H
+#endif //TETRIS_DATA_HPP

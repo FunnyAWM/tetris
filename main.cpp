@@ -1,4 +1,4 @@
-#include "game.h"
+#include "game.hpp"
 #include <cstring>
 #include <fstream>
 #include <conio.h>

@@ -1,5 +1,5 @@
-#ifndef TETRIS_CORE_H
-#define TETRIS_CORE_H
+#ifndef TETRIS_CORE_HPP
+#define TETRIS_CORE_HPP
 
 #include <windows.h>
 #include <string>
@@ -18,4 +18,4 @@ void setTitle(const string &);
 
 void closeHandle();
 
-#endif //TETRIS_CORE_H
+#endif //TETRIS_CORE_HPP

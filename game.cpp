@@ -2,9 +2,9 @@
 #include <fstream>
 #include <random>
 #include <thread>
-#include "game.h"
-#include "core.h"
-#include "data.h"
+#include "game.hpp"
+#include "core.hpp"
+#include "data.hpp"
 
 ///@ÓÎÏ·ºËĞÄ´úÂë
 
