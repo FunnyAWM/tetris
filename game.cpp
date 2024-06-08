@@ -44,6 +44,7 @@ void setDifficulty() {
             break;
         case 3:
             GAME_SPEED = 0.2 * CLOCKS_PER_SEC;
+            break;
         default:
             GAME_SPEED = 0.6 * CLOCKS_PER_SEC;
             break;
