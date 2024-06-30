@@ -3,7 +3,7 @@
 #include <fstream>
 #include <conio.h>
 
-/*#pragma comment(lib, "winmm")*/
+#pragma comment(lib, "winmm")
 
 using std::cout;
 using std::cin;
