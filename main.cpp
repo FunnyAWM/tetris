@@ -3,6 +3,8 @@
 #include <fstream>
 #include <conio.h>
 
+/*#pragma comment(lib, "winmm")*/
+
 using std::cout;
 using std::cin;
 using std::endl;
@@ -12,7 +14,7 @@ using std::endl;
 int main(int argc, char *argv[]) {
     if (argc == 2 && strcmp(argv[1], "-clear") == 0) {
         cout << "This will clean the highest score record.\nWould you continue?[y/N]";
-        switch (getch()) {
+        switch (_getch()) {
             case 'y':
             case 'Y':
                 std::ofstream fout;
@@ -28,7 +30,6 @@ int main(int argc, char *argv[]) {
                 fout.close();
                 return 0;
         }
-        return 0;
     }
     gameInit();
     gameClose();

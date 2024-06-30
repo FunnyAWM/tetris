@@ -2,6 +2,7 @@
 #include <fstream>
 #include <random>
 #include <thread>
+#include <atomic>
 #include "game.hpp"
 #include "core.hpp"
 #include "data.hpp"
@@ -21,6 +22,35 @@ enum Direction {
 
 Block CURRENT, NEXT;
 
+void soundPlay() {
+        PlaySound(".\\resources\\bgmusic.wav", nullptr, SND_LOOP | SND_ASYNC);
+}
+
+
+
+void setMusic(){
+    system("cls");
+    setColor(0x07);
+    setCursorVisibility(0);
+    setPosition(15, 0);
+    cout << "是否开启背景音乐？[Y/n]";
+    setCursorVisibility(1);
+    char musicFlag;
+    cin.get(musicFlag);
+    switch (musicFlag) {
+        case 'N':
+        case 'n':
+            break;
+        case 'Y':
+        case 'y':
+        default:
+            std::thread sound(soundPlay);
+            sound.detach();
+            break;
+    }
+    setCursorVisibility(0);
+}
+
 void setDifficulty() {
     setColor(0x07);
     setPosition(15, 0);
@@ -35,6 +65,7 @@ void setDifficulty() {
     setCursorVisibility(1);
     int difficulty;
     cin >> difficulty;
+    cin.get();
     switch (difficulty) {
         case 1:
             GAME_SPEED = 0.6 * CLOCKS_PER_SEC;
@@ -55,6 +86,7 @@ void setDifficulty() {
 }
 
 void renderWindow(int x, int y) {
+    system("cls");
     for (int i = 0; i < WINDOW_HEIGHT; i++) {
         for (int j = 0; j < WINDOW_WIDTH; j++) {
             if (windowShape[i][j] == 1) {
@@ -73,6 +105,7 @@ void gameInit() {
     setTitle("Tetris");
     start();
     setDifficulty();
+    setMusic();
 
     renderWindow(15, 0);
     readHighest();
@@ -90,9 +123,9 @@ void gameInit() {
 
     while (gameRun) {
         // 检测是否有按键按下
-        if (kbhit()) {
+        if (_kbhit()) {
             // 判断按键
-            switch (getch()) {
+            switch (_getch()) {
                 case 'w':
                 case 'W':
                 case UP:
@@ -184,7 +217,7 @@ void displayScore(int num) {
 
 void pause() {
     for (;;) {
-        if (getch() == 32) {
+        if (_getch() == 32) {
             break;
         }
     }
@@ -263,7 +296,7 @@ void finish() {
     cout << "按Y重新开始";
     setPosition(23, 9);
     cout << "按N退出游戏";
-    switch (getch()) {
+    switch (_getch()) {
         case 'Y':
         case 'y':
             again();
@@ -334,7 +367,7 @@ void start() {
                 a = 0;
             }
         }
-        if (kbhit()) {
+        if (_kbhit()) {
             cin.get();
             break;
         }
@@ -513,6 +546,6 @@ void Block::saveBlock() {
 }
 
 void Block::refresh() {
-    x=22;
-    y=1;
+    x = 22;
+    y = 1;
 }
