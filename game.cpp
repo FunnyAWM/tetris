@@ -21,14 +21,19 @@ enum Direction {
 };
 
 Block CURRENT, NEXT;
+bool musicStatus;
 
-void soundPlay() {
-        PlaySound(".\\resources\\bgmusic.wav", nullptr, SND_LOOP | SND_ASYNC);
+void soundControl(bool status) {
+    if (status) {
+        mciSendString("open .\\resources\\bg1.mp3 alias music", 0, 0, 0);
+        mciSendString("play music repeat", 0, 0, 0);
+    } else {
+        mciSendString("stop music", 0, 0, 0);
+        mciSendString("close music", 0, 0, 0);
+    }
 }
 
-
-
-void setMusic(){
+void setMusic() {
     system("cls");
     setColor(0x07);
     setCursorVisibility(0);
@@ -40,14 +45,15 @@ void setMusic(){
     switch (musicFlag) {
         case 'N':
         case 'n':
+            musicStatus = false;
             break;
         case 'Y':
         case 'y':
         default:
-            std::thread sound(soundPlay);
-            sound.detach();
+            musicStatus = true;
             break;
     }
+    soundControl(musicStatus);
     setCursorVisibility(0);
 }
 
@@ -266,6 +272,7 @@ void fullDown(int lines) {
 }
 
 void gameClose() {
+    soundControl(false);
     closeHandle();
     if (score > highest) {
         highest = score;
