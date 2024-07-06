@@ -5,7 +5,7 @@
 #include "core.hpp"
 #include "data.hpp"
 
-///@ÓÎÏ·ºËĞÄ´úÂë
+///@æ¸¸æˆæ ¸å¿ƒä»£ç 
 
 const int WINDOW_WIDTH = 27;
 const int WINDOW_HEIGHT = 25;
@@ -36,7 +36,7 @@ void setMusic() {
     setColor(0x07);
     setCursorVisibility(0);
     setPosition(15, 0);
-    cout << "ÊÇ·ñ¿ªÆô±³¾°ÒôÀÖ£¿[Y/n]";
+    cout << "æ˜¯å¦å¼€å¯èƒŒæ™¯éŸ³ä¹ï¼Ÿ[Y/n]";
     setCursorVisibility(1);
     char musicFlag;
     cin.get(musicFlag);
@@ -58,13 +58,13 @@ void setMusic() {
 void setDifficulty() {
     setColor(0x07);
     setPosition(15, 0);
-    cout << "ÇëÑ¡ÔñÓÎÏ·ÄÑ¶È¡£\n";
+    cout << "è¯·é€‰æ‹©æ¸¸æˆéš¾åº¦ã€‚\n";
     setPosition(15, 1);
-    cout << "1.¼òµ¥\n";
+    cout << "1.ç®€å•\n";
     setPosition(15, 2);
-    cout << "2.ÖĞµÈ\n";
+    cout << "2.ä¸­ç­‰\n";
     setPosition(15, 3);
-    cout << "3.À§ÄÑ\n";
+    cout << "3.å›°éš¾\n";
     setPosition(15, 4);
     setCursorVisibility(1);
     int difficulty;
@@ -126,9 +126,9 @@ void gameInit() {
     clock_t stopTime;
 
     while (gameRun) {
-        // ¼ì²âÊÇ·ñÓĞ°´¼ü°´ÏÂ
+        // æ£€æµ‹æ˜¯å¦æœ‰æŒ‰é”®æŒ‰ä¸‹
         if (_kbhit()) {
-            // ÅĞ¶Ï°´¼ü
+            // åˆ¤æ–­æŒ‰é”®
             switch (_getch()) {
                 case 'w':
                 case 'W':
@@ -180,22 +180,22 @@ void gameInit() {
 void displayUI() {
     setColor(0x0a);
     setPosition(31, 9);
-    cout << "²Ù×÷ËµÃ÷£º";
+    cout << "æ“ä½œè¯´æ˜ï¼š";
     setColor(0x0b);
     setPosition(32, 11);
-    cout << "°´ A ×óÒÆ\n";
+    cout << "æŒ‰ A å·¦ç§»\n";
     setPosition(32, 12);
-    cout << "°´ D ÓÒÒÆ\n";
+    cout << "æŒ‰ D å³ç§»\n";
     setPosition(32, 13);
-    cout << "°´ W Ğı×ª\n";
+    cout << "æŒ‰ W æ—‹è½¬\n";
     setPosition(32, 14);
-    cout << "°´ S ¼ÓËÙÏÂÂä\n";
+    cout << "æŒ‰ S åŠ é€Ÿä¸‹è½\n";
     setPosition(32, 15);
-    cout << "°´ ¿Õ¸ñ ÔİÍ£\n";
+    cout << "æŒ‰ ç©ºæ ¼ æš‚åœ\n";
     setPosition(32, 16);
-    cout << "°´ »Ø³µ Ö±½ÓÏÂÂä\n";
+    cout << "æŒ‰ å›è½¦ ç›´æ¥ä¸‹è½\n";
     setPosition(32, 17);
-    cout << "°´ O ´ò¿ª/¹Ø±ÕÒôÀÖ\n";
+    cout << "æŒ‰ O æ‰“å¼€/å…³é—­éŸ³ä¹\n";
 }
 
 void displayScore(int num) {
@@ -219,11 +219,11 @@ void displayScore(int num) {
     }
     setColor(0x09);
     setPosition(6, 3);
-    cout << "·ÖÊı£º" << score << endl;
+    cout << "åˆ†æ•°ï¼š" << score << endl;
     setPosition(6, 4);
-    cout << "ÀúÊ·×î¸ß£º" << highest << endl;
+    cout << "å†å²æœ€é«˜ï¼š" << highest << endl;
     setPosition(6, 5);
-    cout << "ÄÑ¶ÈµÈ¼¶£º" << level << endl;
+    cout << "éš¾åº¦ç­‰çº§ï¼š" << level << endl;
 }
 
 void pause() {
@@ -240,7 +240,7 @@ void update() {
             if (windowShape[i][j] == 1) {
                 setColor(0x0e);
                 setPosition(j + 15, i);
-                cout << "¡ö";
+                cout << "â– ";
             } else {
                 setColor(0);
                 setPosition(j + 15, i);
@@ -293,7 +293,7 @@ void over() {
     for (int i = 23; i > 0; i--) {
         for (int j = 14; j > 0; j--) {
             setPosition(j + 15, i);
-            cout << "¡ï";
+            cout << "â˜…";
             Sleep(5);
         }
     }
@@ -303,11 +303,11 @@ void over() {
 void finish() {
     setColor(0x0d);
     setPosition(21, 8);
-    cout << "ÓÎÏ·½áÊø";
+    cout << "æ¸¸æˆç»“æŸ";
     setPosition(16, 9);
-    cout << "°´YÖØĞÂ¿ªÊ¼";
+    cout << "æŒ‰Yé‡æ–°å¼€å§‹";
     setPosition(23, 9);
-    cout << "°´NÍË³öÓÎÏ·";
+    cout << "æŒ‰Né€€å‡ºæ¸¸æˆ";
     switch (_getch()) {
         case 'Y':
         case 'y':
@@ -341,17 +341,17 @@ void printStart(int x, int y) {
     }
     setColor(color);
     setPosition(x, y);
-    printf("¡ö¡ö¡ö¡ö¡ö  ¡ö¡ö¡ö¡ö¡ö  ¡ö¡ö¡ö¡ö¡ö  ¡ö¡ö¡ö¡ö  ¡ö¡ö¡ö    ¡ö¡ö¡ö¡ö");
+    printf("â– â– â– â– â–   â– â– â– â– â–   â– â– â– â– â–   â– â– â– â–   â– â– â–     â– â– â– â– ");
     setPosition(x, y + 1);
-    printf("    ¡ö      ¡ö              ¡ö      ¡ö    ¡ö    ¡ö    ¡ö");
+    printf("    â–       â–               â–       â–     â–     â–     â– ");
     setPosition(x, y + 2);
-    printf("    ¡ö      ¡ö¡ö¡ö¡ö        ¡ö      ¡ö¡ö¡ö¡ö    ¡ö      ¡ö¡ö¡ö");
+    printf("    â–       â– â– â– â–         â–       â– â– â– â–     â–       â– â– â– ");
     setPosition(x, y + 3);
-    printf("    ¡ö      ¡ö              ¡ö      ¡ö  ¡ö      ¡ö            ¡ö");
+    printf("    â–       â–               â–       â–   â–       â–             â– ");
     setPosition(x, y + 4);
-    printf("    ¡ö      ¡ö¡ö¡ö¡ö¡ö      ¡ö      ¡ö    ¡ö  ¡ö¡ö¡ö   ¡ö¡ö¡ö¡ö");
+    printf("    â–       â– â– â– â– â–       â–       â–     â–   â– â– â–    â– â– â– â– ");
     setPosition(20, 15);
-    printf("°´»Ø³µ¼ü¿ªÊ¼ÓÎÏ·");
+    printf("æŒ‰å›è½¦é”®å¼€å§‹æ¸¸æˆ");
 }
 
 void clearStart(int x, int y) {
@@ -416,7 +416,7 @@ inline void clearArea() {
     }
     setColor(0x0a);
     setPosition(31, 1);
-    cout << "ÏÂÒ»¸ö·½¿é£º";
+    cout << "ä¸‹ä¸€ä¸ªæ–¹å—ï¼š";
     setColor(0);
 }
 
@@ -440,7 +440,7 @@ void Block::displaySelf() {
             if (blockShape[blockIndex][blockStatus][i][j] == 1) {
                 setColor(color);
                 setPosition(x + j, y + i);
-                cout << "¡ö";
+                cout << "â– ";
             }
         }
         setColor(0);

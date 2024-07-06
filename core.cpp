@@ -2,7 +2,7 @@
 
 HANDLE handle;
 
-///@系统调用模块
+///@绯荤粺璋冪敤妯″潡
 
 void initHandle() {
     handle = GetStdHandle(STD_OUTPUT_HANDLE);

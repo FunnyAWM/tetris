@@ -9,8 +9,8 @@ using std::cout;
 using std::cin;
 using std::endl;
 
-//这个代码可能有亿点点bug
-//不过相信我，没逝的
+//杩欎釜浠ｇ爜鍙兘鏈変嚎鐐圭偣bug
+//涓嶈繃鐩镐俊鎴戯紝娌￠�濈殑
 int main(int argc, char *argv[]) {
     if (argc == 2 && strcmp(argv[1], "-clear") == 0) {
         cout << "This will clean the highest score record.\nWould you continue?[y/N]";
