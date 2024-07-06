@@ -1,15 +1,13 @@
 #include <conio.h>
 #include <fstream>
 #include <random>
-#include <thread>
-#include <atomic>
 #include "game.hpp"
 #include "core.hpp"
 #include "data.hpp"
 
 ///@游戏核心代码
 
-const int WINDOW_WIDTH = 26;
+const int WINDOW_WIDTH = 27;
 const int WINDOW_HEIGHT = 25;
 const int BLOCK_SIZE = 4;
 int GAME_SPEED;
@@ -158,6 +156,11 @@ void gameInit() {
                 case ENTER:
                     CURRENT.moveBottom();
                     break;
+                case 'o':
+                case 'O':
+                    musicStatus = !musicStatus;
+                    soundControl(musicStatus);
+                    break;
             }
         }
         stopTime = clock();
@@ -191,6 +194,8 @@ void displayUI() {
     cout << "按 空格 暂停\n";
     setPosition(32, 16);
     cout << "按 回车 直接下落\n";
+    setPosition(32, 17);
+    cout << "按 O 打开/关闭音乐\n";
 }
 
 void displayScore(int num) {
